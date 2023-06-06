@@ -1,4 +1,5 @@
 import axios from 'axios'
+import rgbHex from 'rgb-hex'
 import { StyleData, Style, Node, isTextNode } from './types.js'
 
 const masterObject: StyleData = {
@@ -26,6 +27,12 @@ async function fetchStyleObjects(): Promise<Style[]> {
     return styles
 }
 
+/**
+ * @function getStyleData
+ * @return {Promise<StyleData>}
+ * 
+ * Formatted style data from Figma API, consolidated and formatted for use in CSS
+ */
 export async function getStyleData(): Promise<StyleData> {
     const styles: Style[] = await fetchStyleObjects()
     
@@ -37,35 +44,24 @@ export async function getStyleData(): Promise<StyleData> {
     
     Object.keys(nodes).forEach(key => {
         const nodeObject = nodes[key].document
-    
+        
+        // Font Sizes
         if (isTextNode(nodeObject)) {
             const remSize = nodeObject.style.fontSize / 16
             masterObject.fontSizes.push(`${remSize}rem`)
         }
+
+        // Color Hex Values
+        if ('fills' in nodeObject) {
+            const color = nodeObject.fills[0].color
+            const hexValue = `#${rgbHex(color.r * 255, color.g * 255, color.b * 255)}`
+            masterObject.colorHexValues.push(hexValue)
+        }
+    })
+
+    Object.keys(masterObject).forEach(key => {
+        masterObject[key] = [...new Set(masterObject[key])]
     })
     
     return masterObject
-    // masterArray.forEach(node => {
-    //     if ('style' in node && 'fontSize' in node.style) {
-    //         masterObject.fontSizes.push(node.style.fontSize)
-    //     }
-    
-    //     if ('fills' in node) {
-    //         masterObject.colorHexValues.push(node.fills[0].color)
-    //     }
-    // })
-    
-    // masterObject.fontSizes = [...new Set(masterObject.fontSizes)]
-    // masterObject.fontSizes = masterObject.fontSizes.map(fontSize => `${fontSize / 16}rem`)
-    
-    // masterObject.colorHexValues = masterObject.colorHexValues.map(color => ({
-    //     r: Math.round(color.r * 255),
-    //     g: Math.round(color.g * 255),
-    //     b: Math.round(color.b * 255),
-    // }))
-    // .map(color => `#${rgbHex(color.r, color.g, color.b)}`)
-    
-    // masterObject.colorHexValues = [...new Set(masterObject.colorHexValues)]
-    
-    // fs.writeFileSync('./styles.json', JSON.stringify(masterObject, null, 2))
 }
