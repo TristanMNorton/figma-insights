@@ -29,7 +29,7 @@ async function fetchStyleObjects(): Promise<Style[]> {
 
 /**
  * @function getStyleData
- * @return {Promise<StyleData>}
+ * @return {Promise<StyleData>} style data
  * 
  * Formatted style data from Figma API, consolidated and formatted for use in CSS
  */
