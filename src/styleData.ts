@@ -19,8 +19,8 @@ interface NodeResponse {
  * 
  * https://www.figma.com/developers/api#get-file-styles-endpoint
  */
-async function fetchStyleObjects(): Promise<Style[]> {
-    const res = await axios.get('/files/P634r4yMoJO3seiYMYvS6G/styles')
+export async function fetchStyleObjects(fileId: string): Promise<Style[]> {
+    const res = await axios.get(`/files/${fileId}/styles`)
     
     const styles: Style[] = res.data.meta.styles
     
@@ -33,12 +33,12 @@ async function fetchStyleObjects(): Promise<Style[]> {
  * 
  * Formatted style data from Figma API, consolidated and formatted for use in CSS
  */
-export async function getStyleData(): Promise<StyleData> {
-    const styles: Style[] = await fetchStyleObjects()
+export async function getStyleData(fileId: string): Promise<StyleData> {
+    const styles: Style[] = await fetchStyleObjects(fileId)
     
     const nodeIDs = styles.map(style => style.node_id).join(',')
     
-    const allRes = await axios.get(`/files/P634r4yMoJO3seiYMYvS6G/nodes?ids=${nodeIDs}`)
+    const allRes = await axios.get(`/files/${fileId}/nodes?ids=${nodeIDs}`)
     
     const nodes: NodeResponse = allRes.data.nodes
     

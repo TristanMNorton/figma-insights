@@ -7,8 +7,14 @@ axiosSetup()
 const app = express()
 const port = 3000
 
-app.get('/', async (_, res) => {
-    const styleData = await getStyleData()
+app.use((req, _, next) => {
+    console.log(`Request made for figma document id: ${req.query.fileId}`);
+    next();
+});
+
+app.get('/', async (req, res) => {
+    const fileId = req.query.fileId as string
+    const styleData = await getStyleData(fileId)
 
     res.send(styleData)
 })
