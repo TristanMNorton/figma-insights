@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  figmainsights:
+    image: node:18
+
+    volumes:
+      - .:/app 
+
+    working_dir: /app
+
+    labels:
+      - "ops.project=${OPS_PROJECT_NAME}"
+      - "ops.hostname=${OPS_PROJECT_NAME}.${OPS_DOMAIN}"
+      - "traefik.enable=true"
+      - "traefik.docker.network=ops_gateway"
+      - "traefik.frontend.rule=Host:figmainsights.imarc.io"
+      - "traefik.port=3000"
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+      - ops_gateway
+    command: "npm run start"
+
+networks:
+  ops_gateway:
+    external: true
