@@ -13,10 +13,14 @@ app.use((req, _, next) => {
 });
 
 app.get('/', async (req, res) => {
-    const fileId = req.query.fileId as string
-    const styleData = await getStyleData(fileId)
-
-    res.send(styleData)
+    try {
+        const fileId = req.query.fileId as string
+        const styleData = await getStyleData(fileId)
+    
+        res.send(styleData)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.listen(port, () => {
