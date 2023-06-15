@@ -11,6 +11,47 @@ export type ConnectorLineType = 'STRAIGHT' | 'ELBOW'
 
 export type Transform = Array<number[]>
 
+export interface FileNode {
+    key: string
+    name: string
+    description: string
+    remote: boolean
+    componentSetId: string
+    documentationLinks: string[]
+}
+
+export interface FileStyle {
+    key: string
+    name: string
+    styleType: StyleType
+    remote: boolean
+    description: string
+}
+
+export interface Branch {
+    key: string
+    name: string
+    thumbnail_url: string
+    last_modified: string
+    link_access: string
+}
+
+export interface File {
+    name: string
+    role: string
+    lastModified: string
+    editorType: string
+    thumbnailUrl: string
+    version: string
+    document: Node
+    components: Map<string, FileNode>
+    componentSets: Map<string, ComponentSetNode>
+    schemaVersion: number
+    styles: Map<string, Style>
+    mainFileKey: string
+    branches: Branch[]
+}
+
 export interface User {
     id: string
     handle: string
@@ -201,6 +242,7 @@ export interface TypeStyle {
 export interface StyleData {
     fontSizes: string[]
     colorHexValues: string[]
+    spacingSizes: string[]
 }
 
 export interface Node {
@@ -436,3 +478,7 @@ export const isInstanceNode = (node: Node): node is InstanceNode => node.type ==
 export const isStickyNode = (node: Node): node is StickyNode => node.type === 'STICKY'
 export const isShapeWithTextNode = (node: Node): node is ShapeWithTextNode => node.type === 'SHAPE_WITH_TEXT'
 export const isConnectorNode = (node: Node): node is ConnectorNode => node.type === 'CONNECTOR'
+
+export const isNodeWithPadding = (node: Node): node is FrameNode | ComponentNode | ComponentSetNode | InstanceNode => isFrameNode(node) || isComponentNode(node) || isComponentSetNode(node) || isInstanceNode(node)
+
+

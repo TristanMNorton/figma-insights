@@ -1,10 +1,11 @@
 import axios from 'axios'
 import rgbHex from 'rgb-hex'
-import { StyleData, Style, Node, isTextNode } from './types.js'
+import { StyleData, FileNode, Style, Node, isTextNode, isNodeWithPadding } from './types.js'
 
 const masterObject: StyleData = {
     fontSizes: [],
     colorHexValues: [],
+    spacingSizes: [],
 }
 
 interface NodeResponse {
